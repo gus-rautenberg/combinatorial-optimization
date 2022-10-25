@@ -36,14 +36,19 @@ class individual:
         return Z
 
 
-pop = np.zeros((sizePop, sizeInt))
+pop = np.zeros((sizePop, xRange))
 for i in range(sizePop):
-    for j in range(sizeInt):
-        a = random.uniform(0, 1):
-        if (a >= 0.5):
-            p[i][j] = 1
-        # else:
-        #     p[i][j] = 0
+    x = random.randrange(-10, 10)
+    y = random.randrange(-10, 10)
+
+    new individual.__init__(x, y)
+
+    # for j in range(xRange):
+    #     a = random.uniform(0, 1):
+    #     if (a >= 0.5):
+    #         p[i][j] = 1
+    #     # else:
+    #     #     p[i][j] = 0
 
 newGeneration = np.zeros((sizePop, sizeC))
 ind = np.zeros(sizeC)
