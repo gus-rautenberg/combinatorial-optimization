@@ -130,3 +130,5 @@ def binToDec(bin):
 #             for j in range(sizeC):
 
 #                 #  ind[:] = pop[i,: j]
+
+print(individualX.popIntX)
