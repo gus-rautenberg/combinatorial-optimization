@@ -28,7 +28,7 @@ generation = 0
 
 
 class individual:
-    def __init__(initX, initY):
+    def __init__(self, initX, initY):
         self.x = initX
         self.y = initY
 
