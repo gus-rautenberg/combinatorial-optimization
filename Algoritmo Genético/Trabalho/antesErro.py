@@ -2,6 +2,25 @@ import numpy
 import random
 
 
+class individual:
+    def __init__(self, initX, initY):
+        self.x = initX
+        self.y = initY
+
+    def fitnessCalc(self):
+        Z = -(self.x**2 + self.y**2) + 4
+        return Z
+
+    def getFitness(self) -> float:
+        return self.fitness
+
+    def setPercentage(self, percentage) -> None:
+        self.individual_percentage = percentage
+
+    def getPercentage(self) -> None:
+        return self.individual_percentage
+
+
 def binaryTodecimal(n):  # função de converção binaria para decimal
     decimal = 0
     power = 1
@@ -50,6 +69,7 @@ numeroger = 10
 tamanhopop = 10
 contadorger = 0
 contadorger2 = 0
+fitsum = 0
 
 
 # nomenclaturas: sem numero é X, com 2 é Y
@@ -78,14 +98,9 @@ novageracao = numpy.zeros((tamanhopop, cromossomos))
 novageracao2 = numpy.zeros((tamanhopop, cromossomos))
 
 
-class individual:
-    def __init__(self, initX, initY):
-        self.x = initX
-        self.y = initY
-
-    def fitnessCalc(self):
-        Z = -(self.x**2 + self.y**2) + 4
-        return Z
+# def getFitSum():
+#     fitsum = sum([indFit.getFitness() for ind in self.population])
+#     return self.fitsum
 
 
 pop = numpy.zeros((tamanhopop, cromossomos))
@@ -232,6 +247,7 @@ for r in range(tamanhopop):
 for j in range(tamanhopop):
     indFit = individual(real[j], real2[j])
 # print(indFit.fitnessCalc())
+
     fit[j] = indFit.fitnessCalc()
 
 print(fit)
