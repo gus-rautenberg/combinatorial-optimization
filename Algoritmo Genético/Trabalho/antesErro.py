@@ -27,18 +27,20 @@ def numConcat(num1, num2):  # função para concatenar listas
 
 def zeroToCrom(list):
     for i in range(cromossomos):
-        if (i == 1 or 3):
+        if (i == 1 or i == 3):
             list[i] = 1
         else:
             list[i] = 0
+    return list
 
 
 def oneToCrom(list):
     for i in range(cromossomos):
-        if (i == 0 or 1 or 3):
+        if (i == 0 or i == 1 or i == 3):
             list[i] = 1
         else:
             list[i] = 0
+    return list
 
 
 cromossomos = 30
@@ -104,28 +106,13 @@ for h in range(tamanhopop):
         else:
             pop2[h][t] = 0
 
+newPop = numpy.zeros((tamanhopop, cromossomos))
+newPop2 = numpy.zeros((tamanhopop, cromossomos))
 
 # while(contadorger<=numeroger):
 novosindividuos = 0
 novosindividuos2 = 0
 # while(novosindividuos<(tamanhopop-1)):
-
-for r in range(tamanhopop):
-    if (sinal[r] == 0 and inteira[r] >= 10):
-        ind[r] = zeroToCrom(ind[r])
-        inteira[r] = 10
-
-    if (sinal[r] == 1 and inteira[r] >= 10):
-        ind[r] = oneToCrom(ind[r])
-        inteira[r] = 10
-
-    if (sinal2[r] == 0 and inteira2[r] >= 10):
-        ind2[r] = zeroToCrom(ind2[r])
-        inteira2[r] = 10
-
-    if (sinal2[r] == 1 and inteira2[r] >= 10):
-        ind2[r] = oneToCrom(ind2[r])
-        inteira2[r] = 10
 
 
 for i in range(tamanhopop):
@@ -155,6 +142,7 @@ for i in range(tamanhopop):
 
     intinteira2 = [int(i) for i in inteira2]
     intdecimal2 = [int(i) for i in decimal2]
+
 
 for r in range(tamanhopop):
 
@@ -186,14 +174,13 @@ for r in range(tamanhopop):
     base2 = 10
     real2[r] = numConcat(intinteira2[r], intdecimal2[r])
     if (intinteira2[r] >= 10):
-        digits2 = len(str(real2[r]))
-        real2[r] = real2[r]/(base2**(digits2-4))
+        real2[r] = 10
 
     if (intinteira2[r] == 0):
         digits2 = len(str(real2[r]))
         real2[r] = real2[r]/(base2**(digits2-2))
 
-    if (intinteira2[r] < 10 or intinteira2[r] > 0):
+    if (intinteira2[r] < 10 and intinteira2[r] > 0):
         digits2 = len(str(real2[r]))
         real2[r] = real2[r]/(base2**(digits2-3))
 
@@ -218,6 +205,29 @@ for r in range(tamanhopop):
     # if (sinal2[r] == 1 and inteira2[r] >= 10):
     #     ind2[r] = oneToCrom(ind2[r])
     #     inteira2[r] = 10
+
+for r in range(tamanhopop):
+    ind[:] = pop[r, :]
+    ind2[:] = pop2[r, :]
+
+    if (sinal[r] == 0 and inteira[r] >= 10):
+        ind[:] = zeroToCrom(ind)
+        inteira[r] = 10
+
+    if (sinal[r] == 1 and inteira[r] >= 10):
+        ind[:] = oneToCrom(ind)
+        inteira[r] = 10
+
+    if (sinal2[r] == 0 and inteira2[r] >= 10):
+        ind2[:] = zeroToCrom(ind2)
+        inteira2[r] = 10
+
+    if (sinal2[r] == 1 and inteira2[r] >= 10):
+        ind2[:] = oneToCrom(ind2)
+        inteira2[r] = 10
+    pop[r, :] = ind[:]
+    pop2[r, :] = ind2[:]
+
 
 for j in range(tamanhopop):
     indFit = individual(real[j], real2[j])
