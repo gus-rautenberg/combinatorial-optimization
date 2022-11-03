@@ -1,236 +1,260 @@
-import time
-import re
+import numpy
 import random
-import numpy as np
-import math
-from mpl_toolkits import mplot3d
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
-import sys
 
 
-num_individuos = 10
-populacao = []
-populacao_filhos = []
-geracao = 1
-maior_nota = 0
+class individual:
+    def __init__(self, initX, initY):
+        self.x = initX
+        self.y = initY
+
+    def fitnessCalc(self):
+        Z = -(self.x**2 + self.y**2) + 4
+        return Z
+
+    def getFitness(self) -> float:
+        return self.fitness
+
+    def setPercentage(self, percentage) -> None:
+        self.individual_percentage = percentage
+
+    def getPercentage(self) -> None:
+        return self.individual_percentage
 
 
-def converte_b_2_d(n):  # Converte binario para decimal
+def binaryTodecimal(n):  # função de converção binaria para decimal
     decimal = 0
-    n = str(n)
-    n = n[::-1]
-    tam = len(n)
-    for i in range(tam):
-        if n[i] == "1":
-            decimal = decimal + 2**i
+    power = 1
+    while n > 0:
+        rem = n % 10
+        n = n//10
+        decimal += rem*power
+        power = power*2
     return decimal
 
 
-def funcao_ativacao(x, y):  # formula dada no problema
-    return abs(x*math.sin(y*math.pi/4) + y*math.sin(x*math.pi/4))
+def convert(list):  # função de converter uma lista de um tipo, para uma lista de inteiro
+    res = int("".join(map(str, list)))
+    return res
 
 
-def gera_pop():  # Gera inha população inicial de individuos
-    global num_individuos, populacao
-    for i in range(0, num_individuos):
-        individuo = ''
-        for j in range(0, 20):
-            # gera numeros aleatorios dando 50% de ser 0 e 50% de ser 1
-            a = random.randint(0, 10)
-            if a >= 5:
-                individuo += '1'
-            else:
-                individuo += '0'
-        # adiciona a string a população
-        populacao.append(individuo)
+def numConcat(num1, num2):  # função para concatenar listas
+    digits = len(str(num2))
+    num1 = num1 * (10**digits)
+    num1 += num2
+    return num1
 
 
-# Usa a formula dos slides para converter os intervalos
-def converter_intervalo(numero):
-    '''forma da equaçao
-    real = inf + (sup - inf)/(2^k-1)*r
-    equaçao simplificada
-    '''
-    return 0.019550342*numero
-
-
-def gera_pop_filhos(i):
-    global populacao, populacao_filhos, geracao, maior_nota, nota_max
-    nota = []
-    melhor_individuo = ''
-    melhor_individuo_nota = ''
-
-    # Calculando fitness
-
-    # Separando x e y de cada individuo
-    populacao_dec_x = []
-    populacao_dec_y = []
-
-    for i in range(0, num_individuos):
-        aux_x = ''
-        aux_y = ''
-        for j in range(0, 10):
-            aux_x += populacao[i][j]
-            aux_y += populacao[i][j+10]
-
-        populacao_dec_x.append(aux_x)
-        populacao_dec_y.append(aux_y)
-    # Passando cada individuo pela função de avaliação
-    for i in range(0, num_individuos):
-
-        populacao_dec_x[i] = converte_b_2_d(populacao_dec_x[i])
-        populacao_dec_y[i] = converte_b_2_d(populacao_dec_y[i])
-        populacao_dec_x[i] = converter_intervalo(populacao_dec_x[i])
-        populacao_dec_y[i] = converter_intervalo(populacao_dec_y[i])
-        # armazena a nota de cada individuo
-        nota.append(funcao_ativacao(populacao_dec_x[i], populacao_dec_y[i]))
-
-    # Montando roleta
-
-    soma = sum(nota)
-    # cria uma matriz de char com cada "slot" tendo 10 espaçoes
-    tabela_cruzamento = np.chararray(
-        (math.ceil(num_individuos/2), 2), itemsize=20, unicode=False)
-
-    for i in range(0, math.ceil(num_individuos/2)):
-        for j in range(0, 2):
-            # girando a roleta
-            s = random.randint(1, math.floor(soma)-1)
-            ind = 0
-            aux = nota[ind]
-            while (aux < s):
-                ind += 1
-                aux += nota[ind]
-            # selecionei o individuo e tou colocando ele na tabela pra cruzar dps
-            tabela_cruzamento[i][j] = populacao[ind]
-    # como a função da numpy salva como bytes tem que decodificar de volta pra string
-    tabela_cruzamento = tabela_cruzamento.decode('utf-8')
-
-    # Crusar os individuos
-
-    for i in range(0, math.ceil(num_individuos/2)):
-        aux_1 = ''
-        aux_2 = ''
-        aux_3 = ''
-        aux_4 = ''
-        # sorteio de onde será o corte
-        s = random.randint(1, 19)
-
-        for j in range(0, s):
-            aux_1 += tabela_cruzamento[i][0][j]  # ind1 parte1
-            aux_2 += tabela_cruzamento[i][1][j]  # ind2 parte1
-        for j in range(s, 20):
-            aux_3 += tabela_cruzamento[i][0][j]  # ind1 parte2
-            aux_4 += tabela_cruzamento[i][1][j]  # ind2 parte2
-
-        populacao_filhos.append(aux_1+aux_4)
-        populacao_filhos.append(aux_2+aux_3)
-
-    # Aplicar mutaçao
-
-    for i in range(0, num_individuos):
-        # para cada individuo sorteia um numero se ele for menor que 5 ocorrerá mutação
-        s = random.randint(1, 100)
-        if s < 5:
-            # sorteio aleatorio do indice que será mutado
-            indice = random.randint(0, 19)
-            if indice == 0:
-                a = str(populacao_filhos[i][1:])
-
-                if populacao_filhos[i][indice] == '0':
-
-                    populacao_filhos[i] = "1"+a
-                else:
-
-                    populacao_filhos[i] = "0"+a
-
-            if indice == 1:
-
-                a = str(populacao_filhos[i][2:])
-                b = str(populacao_filhos[i][0])
-
-                if populacao_filhos[i][indice] == '0':
-
-                    populacao_filhos[i] = b+"1"+a
-
-                else:
-
-                    populacao_filhos[i] = b+"0"+a
-            else:
-                if populacao_filhos[i][indice] == '0':
-
-                    a = str(populacao_filhos[i][0:indice-1])
-                    b = str((populacao_filhos[i][indice:]))
-                    populacao_filhos[i] = a + "1"+b
-
-                if populacao_filhos[i][indice] == '1':
-
-                    a = str(populacao_filhos[i][0:indice-1])
-                    b = str((populacao_filhos[i][indice:]))
-                    populacao_filhos[i] = a + "0" + b
+def zeroToCrom(list):
+    for i in range(cromossomos):
+        if (i == 1 or i == 3):
+            list[i] = 1
         else:
-            continue
-
-    # Configuraçoes basicas para exibir no grafico
-    # pego a maior nota da geração
-    fit = sorted(nota)
-    maior_nota = fit[num_individuos-1]
-
-    # acha quem é o melhor individuo e qual sua nota e coloca em variaveis golbais e printa no terminal
-    for i in range(0, num_individuos):
-        if nota[i] == maior_nota:
-            x = converte_b_2_d(populacao[i][0:10])
-
-            y = converte_b_2_d(populacao[i][10:])
-
-            x = converter_intervalo(x)
-
-            y = converter_intervalo(y)
-            melhor_individuo = str(populacao[i])
-            melhor_individuo_nota = str(funcao_ativacao(x, y))
-            print('GERAÇÃO: ', geracao)
-            print("\nMelhor individuo: ",
-                  populacao[i], "\nCom Fitness: ", funcao_ativacao(x, y), "\n")
-
-    # zero minha propulação para a prox iteração
-    populacao = []
-
-    # adiciono a populaçao de filhos gerada a população atual
-    for i in range(0, num_individuos):
-        populacao.append(populacao_filhos[i])
-
-    # zero a população de filhos pois todos estao na população atual
-    populacao_filhos = []
-
-    # gerando os pontos para plotagem 3D da função dada na questão
-    X = np.outer(np.linspace(0, 20, 100), np.ones(100))
-    Y = X.copy().T  # transpose
-    Z = np.absolute(X*np.sin(Y*np.pi/4) + Y*np.sin(X*np.pi/4))
-    # configurando os graficos
-    ax = plt.axes(projection='3d')
-    ax.plot_wireframe(X, Y, Z, rstride=10, cstride=10)
-    ax.scatter(populacao_dec_x, populacao_dec_y, nota, color='black')
-    ax.set_title('GERAÇÃO: ' + str(geracao)+"\nMelhor individuo: " +
-                 str(melhor_individuo)+"\nCom Fitness: "+str(melhor_individuo_nota)+"\n")
-
-    # USADO PARA LIMITAR QUANTAS GERAÇÕES PODEM EXISTIR POR TESTE COM 100 INDIVIDUOS ELES   CONVERGEM
-    # PARA O MAXIMO ENTRE 20 E 30 GERAÇÕES COM 10 INDIVIDUOS CONVERGEM PARA UM MAXIMO ENTRE 5 E 15 GERAÇÕES
-    # POREM PARA MELHOR VISUALIZAÇÃO COLQUEI O PADRAO "INFINITO" OU ATÉ SER PARADO CASO QUEIRA LIMITAR UM
-    # NUMERO MAXIMO DE GERAÇOES DESCOMENTE O CODIGO ABAIXO E TROQUE O VALOR 10 PELO DESEJADO
-    # if geracao > 10:
-    #    sys.exit()
-    geracao += 1
+            list[i] = 0
+    return list
 
 
-def gera_grafico():
-    gera_pop()
-    # gera um objeto para a plotagem dos graficos
-    fig = plt.figure()
-    # faz com que os graficos atualizem na mesma tela com um delay de 3000ms ou 3s
-    ani = animation.FuncAnimation(fig, gera_pop_filhos, interval=3000)
-    # "imprime" os graficos
-    plt.show(ani)
+def oneToCrom(list):
+    for i in range(cromossomos):
+        if (i == 0 or i == 1 or i == 3):
+            list[i] = 1
+        else:
+            list[i] = 0
+    return list
 
 
-gera_grafico()
+cromossomos = 30
+pC = 0.90
+pM = 0.05
+gen = 10
+pop_size = 10
+contadorger = 0
+contadorger2 = 0
+fitsum = 0
+
+
+# nomenclaturas: sem numero é X, com 2 é Y
+# ind: individuo passageiro
+# sinal: sinal do numero
+# inteira: parte inteira do numero
+# decimal: parte decimal do numero
+# real: numero em si
+# fit: fit do numero na função
+# novageração: aux para geração
+
+indX = numpy.zeros(cromossomos)
+indY = numpy.zeros(cromossomos)
+
+indB = numpy.zeros(cromossomos)
+indB2 = numpy.zeros(cromossomos)
+
+sinalX = numpy.zeros(pop_size)
+sinalY = numpy.zeros(pop_size)
+
+inteiraX = numpy.zeros(pop_size)
+inteiraY = numpy.zeros(pop_size)
+
+realX = numpy.zeros(pop_size)
+realY = numpy.zeros(pop_size)
+
+decimalX = numpy.zeros(pop_size)
+decimalY = numpy.zeros(pop_size)
+
+fit = numpy.zeros(pop_size)
+
+novageracao = numpy.zeros((pop_size, cromossomos))
+novageracao2 = numpy.zeros((pop_size, cromossomos))
+
+
+# def getFitSum():
+#     fitsum = sum([indFit.getFitness() for ind in self.population])
+#     return self.fitsum
+
+
+pop = numpy.zeros((pop_size, cromossomos))
+for i in range(pop_size):
+    for j in range(cromossomos):
+        a = random.uniform(0, 1)
+        if (a >= 0.5):
+            pop[i][j] = 1
+        else:
+            pop[i][j] = 0
+
+pop2 = numpy.zeros((pop_size, cromossomos))
+for h in range(pop_size):
+    for t in range(cromossomos):
+        a = random.uniform(0, 1)
+        if (a >= 0.5):
+            pop2[h][t] = 1
+        else:
+            pop2[h][t] = 0
+
+newPop = numpy.zeros((pop_size, cromossomos))
+newPop2 = numpy.zeros((pop_size, cromossomos))
+
+# while(contadorger<=numeroger):
+novosindividuos = 0
+novosindividuos2 = 0
+# while(novosindividuos<(pop_size-1)):
+
+
+for i in range(pop_size):
+    indX[:] = pop[i, :]
+    indY[:] = pop2[i, :]
+
+    aux = [int(i) for i in indX]
+    aux2 = [int(i) for i in indY]
+
+    sinalX[i] = indX[0]
+    sinalY[i] = indY[0]
+
+    inteiraX[i] = convert(aux[1:5])
+    inteiraX[i] = binaryTodecimal(inteiraX[i])
+
+    inteiraY[i] = convert(aux2[1:5])
+    inteiraY[i] = binaryTodecimal(inteiraY[i])
+
+    decimalX[i] = convert(aux[6:30])
+    decimalX[i] = binaryTodecimal(decimalX[i])
+
+    decimalY[i] = convert(aux2[6:30])
+    decimalY[i] = binaryTodecimal(decimalY[i])
+
+    intinteiraX = [int(i) for i in inteiraX]
+    intdecimalX = [int(i) for i in decimalX]
+
+    intinteiraY = [int(i) for i in inteiraY]
+    intdecimalY = [int(i) for i in decimalY]
+
+
+for r in range(pop_size):
+
+    aux = [int(r) for r in indX]
+    aux2 = [int(r) for r in indY]
+
+    digits = 0
+    base = 10
+    # print(intinteira[r])
+    # print(intdecimal[r])
+    realX[r] = numConcat(intinteiraX[r], intdecimalX[r])
+    # print(realX[r])
+    # intreal=[int(r) for r in real]
+    if (intinteiraX[r] >= 10):
+        realX[r] = 10
+
+    if (intinteiraX[r] < 10 and intinteiraX[r] > 0):
+        # print(realX[r])
+        digits = len(str(realX[r]))
+        realX[r] = realX[r]/(base**(digits-3))
+        # print("-----------------------------=")
+        # print(realX[r])
+
+    if (intinteiraX[r] == 0):
+        digits = len(str(realX[r]))
+        realX[r] = realX[r]/(base**(digits-2))
+
+    digits2 = 0
+    base2 = 10
+    realY[r] = numConcat(intinteiraY[r], intdecimalY[r])
+    if (intinteiraY[r] >= 10):
+        realY[r] = 10
+
+    if (intinteiraY[r] == 0):
+        digits2 = len(str(realY[r]))
+        realY[r] = realY[r]/(base2**(digits2-2))
+
+    if (intinteiraY[r] < 10 and intinteiraY[r] > 0):
+        digits2 = len(str(realY[r]))
+        realY[r] = realY[r]/(base2**(digits2-3))
+
+    if (sinalX[r] == 1):
+        realX[r] = realX[r]*-1
+
+    if (sinalY[r] == 1):
+        realY[r] = realY[r]*-1
+
+    # if (sinal[r] == 0 and inteira[r] >= 10):
+    #     ind[r] = zeroToCrom(ind[r])
+    #     inteira[r] = 10
+
+    # if (sinal[r] == 1 and inteira[r] >= 10):
+    #     ind[r] = oneToCrom(ind[r])
+    #     inteira[r] = 10
+
+    # if (sinal2[r] == 0 and inteiraY[r] >= 10):
+    #     ind2[r] = zeroToCrom(ind2[r])
+    #     inteiraY[r] = 10
+
+    # if (sinal2[r] == 1 and inteiraY[r] >= 10):
+    #     ind2[r] = oneToCrom(ind2[r])
+    #     inteiraY[r] = 10
+
+for r in range(pop_size):
+    indX[:] = pop[r, :]
+    indY[:] = pop2[r, :]
+
+    if (sinalX[r] == 0 and inteiraX[r] >= 10):
+        indX[:] = zeroToCrom(indX)
+        inteiraX[r] = 10
+
+    if (sinalX[r] == 1 and inteiraX[r] >= 10):
+        indX[:] = oneToCrom(indX)
+        inteiraX[r] = 10
+
+    if (sinalY[r] == 0 and inteiraY[r] >= 10):
+        indY[:] = zeroToCrom(indY)
+        inteiraY[r] = 10
+
+    if (sinalY[r] == 1 and inteiraY[r] >= 10):
+        indY[:] = oneToCrom(indY)
+        inteiraY[r] = 10
+    pop[r, :] = indX[:]
+    pop2[r, :] = indY[:]
+
+
+for j in range(pop_size):
+    indFit = individual(realX[j], realY[j])
+# print(indFit.fitnessCalc())
+
+    fit[j] = indFit.fitnessCalc()
+
+print(fit)
