@@ -1,3 +1,12 @@
+# Desenvolver uma solução de Otimização Combinatória
+# com abordagem de um Algoritmo Genético
+# Codificação: Binária      Seleção: Roleta
+# Cruzamento: Dois Pontos   Mutação: Binária
+# Elitismo: 1 indivíduo por Geração
+
+# Função de Otimização: 𝑍 = −(𝑥² + y²) +4
+# Restrições:    x ∈ [-10, 10] && y ∈ [-10, 10]
+
 import numpy
 import random
 
