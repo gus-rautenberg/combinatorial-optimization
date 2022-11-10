@@ -1,3 +1,9 @@
+# Codificação : Binaria
+# Metodo de seleção: Roleta
+# Metodo de cruzamento : dois pontos aleatorios
+# Metodo de mutação : binaria
+# Elitismo : 1 individuo por geração
+
 import numpy
 import random
 
