@@ -1,6 +1,24 @@
 import numpy
 import random
-from Individual import Individual
+
+
+class Individual:
+    def __init__(self, initX, initY):
+        self.x = initX
+        self.y = initY
+
+    def fitnessCalc(self):
+        Z = -(self.x**2 + self.y**2) + 4
+        return Z
+
+    def getFitness(self) -> float:
+        return self.fitness
+
+    def setPercentage(self, percentage) -> None:
+        self.individual_percentage = percentage
+
+    def getPercentage(self) -> None:
+        return self.individual_percentage
 
 
 def binaryTodecimal(n):  # função de converção binaria para decimal
@@ -52,6 +70,7 @@ pop_size = 10
 contadorger = 0
 contadorger2 = 0
 fitsum = 0
+numeroger = 10
 
 
 # nomenclaturas: sem numero é X, com 2 é Y
@@ -65,6 +84,8 @@ fitsum = 0
 
 indX = numpy.zeros(cromossomos)
 indY = numpy.zeros(cromossomos)
+
+# individuo = numpy.zeros(pop_size)
 
 indB = numpy.zeros(cromossomos)
 indB2 = numpy.zeros(cromossomos)
@@ -85,6 +106,10 @@ fit = numpy.zeros(pop_size)
 
 novageracao = numpy.zeros((pop_size, cromossomos))
 novageracao2 = numpy.zeros((pop_size, cromossomos))
+
+fitsum = 0
+pind = numpy.zeros(pop_size)  # Probabilidades para calcular a roleta
+probtotal = numpy.zeros(pop_size)  # Probabilidades para calcular a roleta
 
 
 # def getFitSum():
@@ -235,8 +260,108 @@ for r in range(pop_size):
 
 for j in range(pop_size):
     indFit = Individual(realX[j], realY[j])
-# print(indFit.fitnessCalc())
-
+    # print(indFit.fitnessCalc())
     fit[j] = indFit.fitnessCalc()
+    fitsum = fit[j] + fitsum  # calculando a soma de todos os fits
 
-print(fit)
+# essa linha ja calcula a probabilidade de todos, sem precisar fazer um for por exemplo
+pind = (1/fitsum)*fit
+
+# a roleta em si, n entendi direito mas funciona
+for i in range(pop_size):
+    if (i == 0):
+        probtotal[i] = pind[i]
+    else:
+        probtotal[i] = pind[i]+probtotal[i-1]
+
+
+jequiti = random.uniform(0, 1)
+i = 0
+while (jequiti > probtotal[i]):
+    i = i+1
+pai = i
+
+
+cassino = random.uniform(0, 1)
+i = 0
+while (cassino > probtotal[i]):
+    i = i+1
+mae = i
+
+while (mae == pai):
+    cassino = random.uniform(0, 1)
+    i = 0
+    while (cassino > probtotal[i]):
+        i = i+1
+    mae = i
+
+        # cruza os cria agr
+
+        if (pC > random.uniform(0, 1)):
+            c = round(1+(cromossomos-2)*random.uniform(0, 1))
+            c2 = round(1+(cromossomos-2)*random.uniform(0, 1))
+            if (c2 == c):
+                while (c2 == c):
+                    c2 = round(1+(cromossomos-2)*random.uniform(0, 1))
+            if (c > c2):
+                auxc = c
+                c = c2
+                c2 = c
+            gene11x = pop[pai][0:c]
+            gene12x = pop[pai][c:c2]
+            gene13x = pop[pai][c:cromossomos]
+            gene21x = pop[mae][0:c]
+            gene22x = pop[mae][c:c2]
+            gene23x = pop[mae][c:cromossomos]
+            filhox = numpy.concatenate((gene11x, gene22x, gene13x), axis=None)
+            filhax = numpy.concatenate((gene21x, gene12x, gene23x), axis=None)
+
+            gene11y = pop[pai][0:c]
+            gene12y = pop[pai][c:c2]
+            gene13y = pop[pai][c:cromossomos]
+            gene21y = pop[mae][0:c]
+            gene22y = pop[mae][c:c2]
+            gene23y = pop[mae][c:cromossomos]
+            filhoy = numpy.concatenate((gene11y, gene22y, gene13y), axis=None)
+            filhay = numpy.concatenate((gene21y, gene12y, gene23y), axis=None)
+
+            novageracao[novosindividuos, :] = filhox
+            novosindividuos = novosindividuos+1
+            novageracao[novosindividuos, :] = filhax
+            novosindividuos = novosindividuos+1
+
+            novageracao2[novosindividuos2, :] = filhoy
+            novosindividuos2 = novosindividuos2+1
+            novageracao2[novosindividuos2, :] = filhay
+            novosindividuos2 = novosindividuos2+1
+
+        # muta os monstros
+        if (pM > random.uniform(0, 1)):
+            m = round(1+(cromossomos-2)*random.uniform(0, 1))
+            if (novageracao[novosindividuos-2][m] == 0):
+                novageracao[novosindividuos-2][m] == 1
+            else:
+                novageracao[novosindividuos-2][m] == 0
+            if (novageracao[novosindividuos-1][m] == 0):
+                novageracao[novosindividuos-1][m] == 1
+            else:
+                novageracao[novosindividuos-1][m] == 0
+
+            if (novageracao2[novosindividuos2-2][m] == 0):
+                novageracao2[novosindividuos2-2][m] == 1
+            else:
+                novageracao2[novosindividuos2-2][m] == 0
+            if (novageracao2[novosindividuos2-1][m] == 0):
+                novageracao2[novosindividuos2-1][m] == 1
+            else:
+                novageracao2[novosindividuos2-1][m] == 0
+
+    indice = fit.argmax()
+    elemX = realX[indice]
+    elemY = realY[indice]
+    contadorger = contadorger+1
+    pop = novageracao
+    pop2 = novageracao2
+    print(elemX)
+    print("--------")
+    print(elemY)'''
