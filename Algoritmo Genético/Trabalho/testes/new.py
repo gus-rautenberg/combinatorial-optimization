@@ -9,66 +9,8 @@
 
 import numpy
 import random
-
-
-class individual:
-    def __init__(self, initX, initY):
-        self.x = initX
-        self.y = initY
-
-    def fitnessCalc(self):
-        Z = -(self.x**2 + self.y**2) + 4
-        return Z
-
-    def getFitness(self) -> float:
-        return self.fitness
-
-    def setPercentage(self, percentage) -> None:
-        self.individual_percentage = percentage
-
-    def getPercentage(self) -> None:
-        return self.individual_percentage
-
-
-def binaryTodecimal(n):  # função de converção binaria para decimal
-    decimal = 0
-    power = 1
-    while n > 0:
-        rem = n % 10
-        n = n//10
-        decimal += rem*power
-        power = power*2
-    return decimal
-
-
-def convert(list):  # função de converter uma lista de um tipo, para uma lista de inteiro
-    res = int("".join(map(str, list)))
-    return res
-
-
-def numConcat(num1, num2):  # função para concatenar listas
-    digits = len(str(num2))
-    num1 = num1 * (10**digits)
-    num1 += num2
-    return num1
-
-
-def zeroToCrom(list):
-    for i in range(cromossomos):
-        if (i == 1 or i == 3):
-            list[i] = 1
-        else:
-            list[i] = 0
-    return list
-
-
-def oneToCrom(list):
-    for i in range(cromossomos):
-        if (i == 0 or i == 1 or i == 3):
-            list[i] = 1
-        else:
-            list[i] = 0
-    return list
+from Individual import Individual
+from Functions import *
 
 
 cromossomos = 30
@@ -266,7 +208,7 @@ while (contadorger <= numeroger):
             pop2[r, :] = indY[:]
 
         for j in range(pop_size):
-            indFit = individual(realX[j], realY[j])
+            indFit = Individual(realX[j], realY[j])
             # print(indFit.fitnessCalc())
             fit[j] = indFit.fitnessCalc()
             fitsum = fit[j] + fitsum  # calculando a soma de todos os fits
