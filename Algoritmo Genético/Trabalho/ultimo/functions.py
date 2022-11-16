@@ -33,6 +33,21 @@ def zeroToCrom(list, num1):
     return list
 
 
+def initInd(list, num1):
+    for j in range(num1):
+        a = random.uniform(0, 1)
+        if (a >= 0.5):
+            list[j] = 1
+        else:
+            list[j] = 0
+    return list
+
+
+def arredondar(list, num1):
+    aux = initInd(list, num1)
+    return aux
+
+
 def oneToCrom(list, num1):
     for i in range(num1):
         if (i == 0 or i == 1 or i == 3):

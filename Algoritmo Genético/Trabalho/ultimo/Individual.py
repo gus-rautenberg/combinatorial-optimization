@@ -3,12 +3,12 @@ class Individual:
         self.x = initX
         self.y = initY
 
-    def fitnessCalc(self):
-        Z = -(self.x**2 + self.y**2) + 4
+    def fitnessCalc(self) -> float:
+        Z = -((self.x**2) + (self.y**2)) + 4
         return Z
 
     def getFitness(self) -> float:
-        return self.fitness
+        return self.fitnessCalc
 
     def setPercentage(self, percentage) -> None:
         self.individual_percentage = percentage
