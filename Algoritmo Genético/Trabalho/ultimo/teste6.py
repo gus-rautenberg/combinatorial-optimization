@@ -95,9 +95,7 @@ while (contGen <= generations):
             print("FIRST TIME = ", realX[chad])
         
         fitSum = 0
-        aux_size=0
-        if(contGen >0):
-            aux_size= 1
+        
         
         for i in range(pop_size):
             indX[:] = pop[i, :]
@@ -127,7 +125,7 @@ while (contGen <= generations):
             intinteiraY = [int(i) for i in inteiraY]
             intdecimalY = [int(i) for i in decimalY]
 
-        for r in range(pop_size-aux_size):
+        for r in range(pop_size):
 
             digits = 0
             base = 10
@@ -137,18 +135,13 @@ while (contGen <= generations):
             if (intinteiraX[r] >= 10):
                 realX[r] = 10
 
-            if (intinteiraX[r] > 0 and intinteiraX[r] < 10):
+            if (intinteiraX[r] < 10 and intinteiraX[r] > 0):
                 digits = len(str(realX[r]))
                 realX[r] = realX[r]/(base**(digits-3))
 
-            if(contGen == 0):
-                if (intinteiraX[r] == 0):
-                    digits = len(str(realX[r]))
-                    realX[r] = realX[r]/(base**(digits-1))
-            elif(contGen > 0 and r < pop_size-1):
-                if (intinteiraX[r] == 0):
-                    digits = len(str(realX[r]))
-                    realX[r] = realX[r]/(base**(digits-1))
+            if (intinteiraX[r] == 0):
+                digits = len(str(realX[r]))
+                realX[r] = realX[r]/(base**(digits-2))
 
             digits2 = 0
             base2 = 10
@@ -156,15 +149,10 @@ while (contGen <= generations):
             realY[r] = numConcat(intinteiraY[r], intdecimalY[r])
             if (intinteiraY[r] >= 10):
                 realY[r] = 10
-                
-            if(contGen == 0):
-                if (intinteiraY[r] == 0):
-                    digits2 = len(str(realY[r]))
-                    realY[r] = realY[r]/(base2**(digits2-1))
-            elif(contGen > 0 and r != pop_size-1):
-                if (intinteiraY[r] == 0):
-                    digits2 = len(str(realY[r]))
-                    realY[r] = realY[r]/(base2**(digits2-1))
+
+            if (intinteiraY[r] == 0):
+                digits2 = len(str(realY[r]))
+                realY[r] = realY[r]/(base2**(digits2-2))
 
             if (intinteiraY[r] < 10 and intinteiraY[r] > 0):
                 digits2 = len(str(realY[r]))
@@ -198,7 +186,7 @@ while (contGen <= generations):
             pop[r, :] = indX[:]
             pop2[r, :] = indY[:]
         
-        print("Second TIME = ", realX[pop_size-1])
+        print("FIRST TIME = ", realX[pop_size-1])
         for j in range(pop_size):
             indFit = Individual(realX[j], realY[j])
             fit[j] = indFit.fitnessCalc()
@@ -371,60 +359,54 @@ while (contGen <= generations):
         intinteiraY = [int(i) for i in inteiraY]
         intdecimalY = [int(i) for i in decimalY]
     
-    for r in range(pop_size-aux_size):
+    for r in range(pop_size):
 
         digits = 0
         base = 10
         
         realX[r] = numConcat(intinteiraX[r], intdecimalX[r])
-        if (intinteiraX[r] >= 10):
-             realX[r] = 10
+        print("FIRST TIMEaa = ", realX[pop_size-1])
+        # if (intinteiraX[r] >= 10):
+        #     realX[r] = 10
 
-        if (intinteiraX[r] < 10 and intinteiraX[r] > 0):
-            digits = len(str(realX[r]))
-            realX[r] = realX[r]/(base**(digits-3))
+        # if (intinteiraX[r] < 10 and intinteiraX[r] > 0):
+        #     digits = len(str(realX[r]))
+        #     realX[r] = realX[r]/(base**(digits-3))
 
-        if(contGen == 0):
-            if (intinteiraX[r] == 0):
-                digits = len(str(realX[r]))
-                realX[r] = realX[r]/(base**(digits-2))
-        elif(contGen > 0 and r != pop_size-1):
-            if (intinteiraX[r] == 0):
-                digits = len(str(realX[r]))
-                realX[r] = realX[r]/(base**(digits-2))
+        # if (intinteiraX[r] == 0):
+        #     digits = len(str(realX[r]))
+        #     realX[r] = realX[r]/(base**(digits-2))
 
-        digits2 = 0
-        base2 = 10
+        # digits2 = 0
+        # base2 = 10
 
-        realY[r] = numConcat(intinteiraY[r], intdecimalY[r])
-        if (intinteiraY[r] >= 10):
-            realY[r] = 10
-            
-        if(contGen == 0):
-            if (intinteiraY[r] == 0):
-                digits2 = len(str(realY[r]))
-                realY[r] = realY[r]/(base2**(digits2-2))
-        elif(contGen > 0 and r != pop_size-1):
-            if (intinteiraY[r] == 0):
-                digits2 = len(str(realY[r]))
-                realY[r] = realY[r]/(base2**(digits2-2))
+        # realY[r] = numConcat(intinteiraY[r], intdecimalY[r])
+        # if (intinteiraY[r] >= 10):
+        #     realY[r] = 10
 
-        if (intinteiraY[r] < 10 and intinteiraY[r] > 0):
-            digits2 = len(str(realY[r]))
-            realY[r] = realY[r]/(base2**(digits2-3))
+        # if (intinteiraY[r] == 0):
+        #     digits2 = len(str(realY[r]))
+        #     realY[r] = realY[r]/(base2**(digits2-2))
 
-        if (sinalX[r] == 1):
-            realX[r] = realX[r]*-1
+        # if (intinteiraY[r] < 10 and intinteiraY[r] > 0):
+        #     digits2 = len(str(realY[r]))
+        #     realY[r] = realY[r]/(base2**(digits2-3))
 
-        if (sinalY[r] == 1):
-            realY[r] = realY[r]*-1
+        # if (sinalX[r] == 1):
+        #     realX[r] = realX[r]*-1
+
+        # if (sinalY[r] == 1):
+        #     realY[r] = realY[r]*-1
     
-    print("Third TIME = ", realX[pop_size-1])
+    print("FIRST TIME = ", realX[pop_size-1])
     fitSum = 0
     for j in range(pop_size):
         indFit = Individual(realX[j], realY[j])
         fit[j] = indFit.fitnessCalc()
         fitSum = fit[j] + fitSum  # calculando a soma de todos os fits
+            
+            
+            
         
             
     chad = 0
