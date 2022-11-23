@@ -87,8 +87,8 @@ while (genCount <= generations):
             indY[:] = pop2[i, :]
             auxConv = 0
             auxConv2 = 0
-            sinalX[i] = indX[0]
-            sinalY[i] = indY[0]
+            sinalX[i] = indX[29]
+            sinalY[i] = indY[29]
 
             for j in range(cromossomos):
                 auxConv = auxConv+indX[j]*(2**(cromossomos-(j+1)))

@@ -87,8 +87,8 @@ while (genCount <= generations):
             indY[:] = pop2[i, :]
             auxConv = 0
             auxConv2 = 0
-            sinalX[i] = indX[0]
-            sinalY[i] = indY[0]
+            sinalX[i] = indX[29]
+            sinalY[i] = indY[29]
 
             for j in range(cromossomos):
                 auxConv = auxConv+indX[j]*(2**(cromossomos-(j+1)))
@@ -243,8 +243,8 @@ while (genCount <= generations):
             indY[:] = newGenY[i, :]
             auxConv = 0
             auxConv2 = 0
-            sinalX[i] = indX[0]
-            sinalY[i] = indY[0]
+            sinalX[i] = indX[29]
+            sinalY[i] = indY[29]
 
             for j in range(cromossomos):
                 auxConv = auxConv+indX[j]*(2**(cromossomos-(j+1)))
@@ -307,33 +307,4 @@ while (genCount <= generations):
   #  print("Melhor Pop =", pop[pop_size-1])
     genCount = genCount+1
 
-
-#ax = plt.axes(xlim=[-10, 10], ylim=[-10, 10])
-# ax.scatter(x_pop, y_pop, fit_pop)
-# plt.show()
-# testeX = x_pop
-# testeX.tolist()
-# testeY = y_pop
-# testeY.tolist()
-# 1
-# testeF = fit_pop
-# testeF.tolist
-
-
-# #fig = plt.figure()
-# #ax = fig.add_subplot(111)
-# #[x, y] = numpy.meshgrid(x_pop, y_pop)
-# #ax.contourf(testeX, testeY, fit_pop)
-animate(100)
-
-
-# # for i in range(generations):
-# #X, Y = numpy.meshgrid(x_pop[i], y_pop[i])
-# #Z = -(X**2 + Y**2) + 4
-# #ax.plot_surface(X, Y, Z)
-# # plt.show()
-# #     #if (i == generations-1):
-# #         ax.scatter(x_pop[i], y_pop[i], c='k')
-# #     else:
-# #         ax.scatter(x_pop[i], y_pop[i])
-# # plt.show()
+animate(250)
