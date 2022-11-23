@@ -15,11 +15,11 @@ import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 from matplotlib.animation import FuncAnimation
 #==============================Condições=====================================#
-cromossomos = 30
+cromossomos = 30    
 pC = 0.75
 pM = 0.025
 pop_size = int(input("Population size: "))
-g3x = 0
+genCount = 0
 generations = int(input("Generaion times: "))
 #=======================Gerando a Primeira População=========================#
 pop = numpy.zeros((pop_size, cromossomos))
@@ -47,36 +47,36 @@ z_data = numpy.zeros(pop_size)
 x_pop = numpy.zeros((generations+1, pop_size))
 y_pop = numpy.zeros((generations+1, pop_size))
 fit_pop = numpy.zeros((generations+1, pop_size))
-
-
-def animate(self, interval: int = 200):
-    gensX = x_pop
-    gensY = y_pop
-    fig = plt.figure(1)
-    ax = plt.axes(xlim=[-10, 10], ylim=[-10, 10])
-    x = [ind.x for ind in gensX[0]]
-    y = [ind.y for ind in gensY[0]]
-    scatter = ax.scatter(x, y)
-
-    def update(i):
-        for ind in range(gensX):
-            X, Y = numpy.meshgrid(x, y)
-
-            scatter.set_offsets(x, y)
-            fig.suptitle("Generation: "+str(i))
-
-        return scatter,
-    anim = FuncAnimation(fig, update, frames=len(gensX)-1, interval=interval)
-    plt.show()
 #======================Começçççççççççççççççççççççççççççooou=================#
+# def animate(interval : int = 200):
+#         gensX = x_pop
+#         gensY = y_pop
+#         fig = plt.figure(1)
+#         ax = plt.axes(xlim=[-10, 10], ylim=[-10, 10])
+
+#         x = [ind.x for ind in gensX[0]]
+#         y = [ind.y for ind in gensY[0]]
+#         scatter = ax.scatter(x, y)
+
+#         def update(i):
+#             xy = [[ind.x, ind.y] for ind in gens[i]]
+
+#             scatter.set_offsets(xy)
+#             fig.suptitle("Generation: "+str(i))
+
+#             return scatter,
+        
+#         anim = FuncAnimation(fig, update, frames=len(gens)-1, interval=interval)
+#         plt.show()
 
 
-while (g3x <= generations):
+
+while (genCount <= generations):
     newInds = 0
     newInds2 = 0
     aux_size = 1
     while (newInds < (pop_size-aux_size)):
-        if (g3x > 0):
+        if (genCount > 0):
             pop[pop_size-1] = bestIndX[:]
             pop2[pop_size-1] = bestIndY[:]
 
@@ -100,13 +100,13 @@ while (g3x <= generations):
                 realX[i] = realX[i]*-1
             if (sinalY[i] == 1):
                 realY[i] = realY[i]*-1
-            if (g3x > 0):
+            if (genCount > 0):
                 realX[pop_size-1] = bestRealX
                 realY[pop_size-1] = bestRealY
 
         # =======Fit
         fitTotal = 0
-        if (g3x > 0):
+        if (genCount > 0):
             pop[pop_size-1] = bestIndX
             pop2[pop_size-1] = bestIndY
 
@@ -126,24 +126,24 @@ while (g3x <= generations):
             else:
                 probTotal[i] = probInd[i]+probTotal[i-1]
 
-        jequiti = random.uniform(0, 1)
+        roletaA = random.uniform(0, 1)
         i = 0
-        while (jequiti > probTotal[i]):
+        while (roletaA > probTotal[i]):
             i = i+1
 
         pai = i
 
-        cassino = random.uniform(0, 1)
+        roletaB = random.uniform(0, 1)
         i = 0
-        while (cassino > probTotal[i]):
+        while (roletaB > probTotal[i]):
             i = i+1
 
         mae = i
 
         while (mae == pai):
-            cassino = random.uniform(0, 1)
+            roletaB = random.uniform(0, 1)
             i = 0
-            while (cassino > probTotal[i]):
+            while (roletaB > probTotal[i]):
                 i = i+1
             mae = i
     # =======Cruzamento de dois pontos aleatorios
@@ -236,7 +236,7 @@ while (g3x <= generations):
     chad = 0
     bFit = fit[0]
 
-    if (g3x > 0):
+    if (genCount > 0):
         for i in range(pop_size):
             indX[:] = newGenX[i, :]
             indY[:] = newGenY[i, :]
@@ -256,11 +256,11 @@ while (g3x <= generations):
                 realX[i] = realX[i]*-1
             if (sinalY[i] == 1):
                 realY[i] = realY[i]*-1
-            if (g3x > 0):
+            if (genCount > 0):
                 realX[pop_size-1] = bestRealX
                 realY[pop_size-1] = bestRealY
 
-        if (g3x > 0):
+        if (genCount > 0):
             newGenX[pop_size-1] = bestIndX
             newGenY[pop_size-1] = bestIndY
 
@@ -274,7 +274,7 @@ while (g3x <= generations):
             bFit = fit[p]
             chad = p
 
-    if (g3x == 0):
+    if (genCount == 0):
         bestIndX = pop[chad, :]
         bestIndY = pop2[chad, :]
     else:
@@ -285,16 +285,16 @@ while (g3x <= generations):
     bestRealY = realY[chad]
 
     for i in range(pop_size):
-        x_pop[g3x][i] = realX[i]
-        y_pop[g3x][i] = realY[i]
-        fit_pop[g3x][i] = fit[i]-196
+        x_pop[genCount][i] = realX[i]
+        y_pop[genCount][i] = realY[i]
+        fit_pop[genCount][i] = fit[i]-196
 
     newGenX[pop_size-1] = bestIndX[:]
     newGenY[pop_size-1] = bestIndY[:]
 
     elemX = realX[chad]
     elemY = realY[chad]
-    print("GENERATION ", g3x)
+    print("GENERATION ", genCount)
     print("melhor X = ", elemX)
     print("melhor Y = ", elemY)
     print("melhor FIT = ", fit[chad]-196)
@@ -304,21 +304,21 @@ while (g3x <= generations):
     pop = newGenX
     pop2 = newGenY
   #  print("Melhor Pop =", pop[pop_size-1])
-    # ax = plt.axes(xlim=[-10, 10], ylim=[-10, 10])
-
-    # ax.scatter(x_pop[g3x], x_pop[g3x])
-    # plt.show()
-
-    g3x = g3x+1
+    genCount = genCount+1
 
 
-#ax = plt.axes(projection=none)
+ax = plt.axes(xlim=[-10, 10], ylim=[-10, 10])
 # ax.scatter(x_pop, y_pop, fit_pop)
 # plt.show()
 
-animate(200)
-# for i in range(pop_size):
-#X, Y = numpy.meshgrid(x_pop[i], y_pop[i])
-#Z = -(X**2 + Y**2) + 4
-#ax.plot_surface(X, Y, Z)
-# plt.show()
+
+for i in range(generations):
+    #X, Y = numpy.meshgrid(x_pop[i], y_pop[i])
+    #Z = -(X**2 + Y**2) + 4
+    #ax.plot_surface(X, Y, Z)
+    # plt.show()
+    if(i==generations-1):
+        ax.scatter(x_pop[i], y_pop[i], c = 'k')
+    else:    
+        ax.scatter(x_pop[i], y_pop[i])
+plt.show()

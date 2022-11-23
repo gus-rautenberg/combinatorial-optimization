@@ -1,7 +1,7 @@
 class Individual:
     def __init__(self, initX, initY):
         self.x = initX
-        self.y = initY
+        self.y = initY      
 
     def fitnessCalc(self) -> float:
         Z = -((self.x**2) + (self.y**2)) + 4

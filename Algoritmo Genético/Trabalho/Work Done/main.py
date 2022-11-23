@@ -13,6 +13,7 @@ from Individual import Individual
 from functions import *
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
+from matplotlib.animation import FuncAnimation
 #==============================Condições=====================================#
 cromossomos = 30
 pC = 0.75
