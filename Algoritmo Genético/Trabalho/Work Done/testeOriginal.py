@@ -10,13 +10,13 @@
 import numpy
 import random
 from Individual import Individual
-from functions import *
+from functions1 import *
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 #==============================Condições=====================================#
 cromossomos = 30
-pC = 0.75
-pM = 0.025
+pC = 0.99
+pM = 0.99
 pop_size = int(input("Population size: "))
 g3x = 0
 generations = int(input("Generaion times: "))
@@ -58,28 +58,8 @@ while (g3x <= generations):
             pop2[pop_size-1] = bestIndY[:]
 
 # =======Binario para decimal
-        for i in range(pop_size):
-            indX[:] = pop[i, :]
-            indY[:] = pop2[i, :]
-            auxConv = 0
-            auxConv2 = 0
-            sinalX[i] = indX[0]
-            sinalY[i] = indY[0]
-
-            for j in range(cromossomos):
-                auxConv = auxConv+indX[j]*(2**(cromossomos-(j+1)))
-                auxConv2 = auxConv2+indY[j]*(2**(cromossomos-(j+1)))
-
-            realX[i] = (10/(2**cromossomos-1))*auxConv
-            realY[i] = (10/(2**cromossomos-1))*auxConv2
-
-            if (sinalX[i] == 1):
-                realX[i] = realX[i]*-1
-            if (sinalY[i] == 1):
-                realY[i] = realY[i]*-1
-            if (g3x > 0):
-                realX[pop_size-1] = bestRealX
-                realY[pop_size-1] = bestRealY
+        binToDec(pop_size, cromossomos, pop, pop2, bestRealX, bestRealY,
+                 indX, indY, sinalX, sinalY, realX, realY, g3x)
 
         # =======Fit
         fitTotal = 0
@@ -167,25 +147,26 @@ while (g3x <= generations):
             newGenY[newInds2, :] = filhay
             newInds2 = newInds2+1
     # =======Mutar os monstros
-            if (pM > random.uniform(0, 1)):
-                m = round(1+(cromossomos-2)*random.uniform(0, 1))
-                if (newGenX[newInds-2][m] == 0):
-                    newGenX[newInds-2][m] == 1
-                else:
-                    newGenX[newInds-2][m] == 0
-                if (newGenX[newInds-1][m] == 0):
-                    newGenX[newInds-1][m] == 1
-                else:
-                    newGenX[newInds-1][m] == 0
+            for i in range(cromossomos):
+                if (pM > random.uniform(0, 1)):
+                    # m = round(1+(cromossomos-2)*random.uniform(0, 1))
+                    if (newGenX[newInds-2][i] == 0):
+                        newGenX[newInds-2][i] == 1
+                    else:
+                        newGenX[newInds-2][i] == 0
+                    if (newGenX[newInds-1][i] == 0):
+                        newGenX[newInds-1][i] == 1
+                    else:
+                        newGenX[newInds-1][i] == 0
 
-                if (newGenY[newInds2-2][m] == 0):
-                    newGenY[newInds2-2][m] == 1
-                else:
-                    newGenY[newInds2-2][m] == 0
-                if (newGenY[newInds2-1][m] == 0):
-                    newGenY[newInds2-1][m] == 1
-                else:
-                    newGenY[newInds2-1][m] == 0
+                    if (newGenY[newInds2-2][i] == 0):
+                        newGenY[newInds2-2][i] == 1
+                    else:
+                        newGenY[newInds2-2][i] == 0
+                    if (newGenY[newInds2-1][i] == 0):
+                        newGenY[newInds2-1][i] == 1
+                    else:
+                        newGenY[newInds2-1][i] == 0
         else:
             auxX = numpy.zeros(cromossomos)
             auxY = numpy.zeros(cromossomos)
@@ -289,10 +270,10 @@ ax = plt.axes(projection="3d")
 # plt.show()
 
 
-#for i in range(pop_size):
-    #X, Y = numpy.meshgrid(x_pop[i], y_pop[i])
-    #Z = -(X**2 + Y**2) + 4
-    #ax.plot_surface(X, Y, Z)
-    # plt.show()
-    #ax.scatter(x_pop[i], x_pop[i], fit_pop[i])
-    #plt.show()
+# for i in range(pop_size):
+# X, Y = numpy.meshgrid(x_pop[i], y_pop[i])
+# Z = -(X**2 + Y**2) + 4
+# ax.plot_surface(X, Y, Z)
+# plt.show()
+# ax.scatter(x_pop[i], x_pop[i], fit_pop[i])
+# plt.show()

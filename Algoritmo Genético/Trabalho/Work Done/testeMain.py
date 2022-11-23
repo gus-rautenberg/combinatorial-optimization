@@ -20,6 +20,7 @@ pM = 0.025
 pop_size = int(input("Population size: "))
 g3x = 0
 generations = int(input("Generaion times: "))
+
 #=======================Gerando a Primeira População=========================#
 pop = numpy.zeros((pop_size, cromossomos))
 initPop(pop, pop_size, cromossomos)
@@ -46,6 +47,7 @@ z_data = numpy.zeros(pop_size)
 x_pop = numpy.zeros((generations+1, pop_size))
 y_pop = numpy.zeros((generations+1, pop_size))
 fit_pop = numpy.zeros((generations+1, pop_size))
+gene = Individual
 #======================Começçççççççççççççççççççççççççççooou=================#
 
 while (g3x <= generations):
@@ -88,7 +90,8 @@ while (g3x <= generations):
             pop2[pop_size-1] = bestIndY
 
         for i in range(pop_size):
-            fit[i] = -(realX[i]**2+realY[i]**2)+4
+            gene(realX[i], realY[i])
+            fit[i] = gene.getFitness
             fit[i] = fit[i]+196
             fitTotal = fit[i]+fitTotal
     # =======Probabilidade dos homi
@@ -242,7 +245,8 @@ while (g3x <= generations):
             newGenY[pop_size-1] = bestIndY
 
         for i in range(pop_size):
-            fit[i] = -(realX[i]**2+realY[i]**2)+4
+            gene(realX[i], realY[i])
+            fit[i] = gene.getFitness
             fit[i] = fit[i]+196
             fitTotal = fit[i]+fitTotal
 
@@ -276,23 +280,8 @@ while (g3x <= generations):
     print("melhor Y = ", elemY)
     print("melhor FIT = ", fit[chad]-196)
     print("==============================")
-  #  print("Melhor NG =", newGenX[pop_size-1])
-   # print("Melhor Pop =", pop[pop_size-1])
+
     pop = newGenX
     pop2 = newGenY
-  #  print("Melhor Pop =", pop[pop_size-1])
+
     g3x = g3x+1
-
-
-ax = plt.axes(projection="3d")
-# ax.scatter(x_pop, y_pop, fit_pop)
-# plt.show()
-
-
-#for i in range(pop_size):
-    #X, Y = numpy.meshgrid(x_pop[i], y_pop[i])
-    #Z = -(X**2 + Y**2) + 4
-    #ax.plot_surface(X, Y, Z)
-    # plt.show()
-    #ax.scatter(x_pop[i], x_pop[i], fit_pop[i])
-    #plt.show()

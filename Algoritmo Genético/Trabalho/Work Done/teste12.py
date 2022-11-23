@@ -5,6 +5,7 @@ from functions import *
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 
+
 def f(x, y):
     return -(x**2 + y**2) + 4
 # Surface
@@ -22,6 +23,7 @@ def f(x, y):
 # plt.show()
 
 # Points
+
 
 x = numpy.arange(-10, 10, 0.1)
 y = numpy.arange(-10, 10, 0.1)

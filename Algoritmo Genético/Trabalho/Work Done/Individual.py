@@ -7,7 +7,7 @@ class Individual:
         Z = -((self.x**2) + (self.y**2)) + 4
         return Z
 
-    def getFitness(self) -> float:
+    def getFitness(self):
         return self.fitnessCalc
 
     def setPercentage(self, percentage) -> None:
